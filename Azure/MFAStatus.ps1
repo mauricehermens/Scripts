@@ -73,7 +73,7 @@ param(
     ParameterSetName  = "AllUsers"
   )]
   # Set the Max results to return
-  [int]$MaxResults = 10000,
+  [int]$MaxResults = 100000,
 
   [Parameter(
     Mandatory         = $false,
@@ -150,6 +150,7 @@ if ($PSBoundParameters.ContainsKey('UserPrincipalName')) {
       If (($MsolUser.StrongAuthenticationRequirements) -or ($MsolUser.StrongAuthenticationMethods)) {
         Switch ($MFAMethod) {
             "OneWaySMS" { $Method = "SMS token" }
+            "TwoWayVoiceOffice" { $Method = "Office phone verification" }
             "TwoWayVoiceMobile" { $Method = "Phone call verification" }
             "PhoneAppOTP" { $Method = "Hardware token or authenticator app" }
             "PhoneAppNotification" { $Method = "Authenticator app" }
@@ -186,6 +187,7 @@ elseif ($adminsOnly) {
     If (($MsolUser.StrongAuthenticationRequirements) -or ($MsolUser.StrongAuthenticationMethods)) {
         Switch ($MFAMethod) {
             "OneWaySMS" { $Method = "SMS token" }
+            "TwoWayVoiceOffice" { $Method = "Office phone verification" }
             "TwoWayVoiceMobile" { $Method = "Phone call verification" }
             "PhoneAppOTP" { $Method = "Hardware token or authenticator app" }
             "PhoneAppNotification" { $Method = "Authenticator app" }
@@ -199,6 +201,7 @@ elseif ($adminsOnly) {
       "MFA Enabled"     = if ($MsolUser.StrongAuthenticationMethods) {$true} else {$false}
       "MFA Default Type"= $Method
       "SMS token"       = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "OneWaySMS") {$true} else {"-"}
+      "Office phone verification" = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "TwoWayVoiceOffice") {$true} else {"-"}
       "Phone call verification" = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "TwoWayVoiceMobile") {$true} else {"-"}
       "Hardware token or authenticator app" = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "PhoneAppOTP") {$true} else {"-"}
       "Authenticator app" = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "PhoneAppNotification") {$true} else {"-"}
@@ -217,6 +220,7 @@ else {
       If (($MsolUser.StrongAuthenticationRequirements) -or ($MsolUser.StrongAuthenticationMethods)) {
         Switch ($MFAMethod) {
             "OneWaySMS" { $Method = "SMS token" }
+            "TwoWayVoiceOffice" { $Method = "Office phone verification" }
             "TwoWayVoiceMobile" { $Method = "Phone call verification" }
             "PhoneAppOTP" { $Method = "Hardware token or authenticator app" }
             "PhoneAppNotification" { $Method = "Authenticator app" }
@@ -244,6 +248,7 @@ else {
           "MFA Enabled"     = if ($MsolUser.StrongAuthenticationMethods) {$true} else {$false}
           "MFA Default Type"= $Method
           "SMS token"       = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "OneWaySMS") {$true} else {"-"}
+          "Office phone verification" = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "TwoWayVoiceOffice") {$true} else {"-"}
           "Phone call verification" = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "TwoWayVoiceMobile") {$true} else {"-"}
           "Hardware token or authenticator app" = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "PhoneAppOTP") {$true} else {"-"}
           "Authenticator app" = if ($MsolUser.StrongAuthenticationMethods.MethodType -contains "PhoneAppNotification") {$true} else {"-"}
