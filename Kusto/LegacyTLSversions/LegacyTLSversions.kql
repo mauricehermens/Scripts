@@ -1,0 +1,21 @@
+// Interactive sign-ins only
+SigninLogs
+| where AuthenticationProcessingDetails has "Legacy TLS"
+    and AuthenticationProcessingDetails has "True"
+| extend JsonAuthProcDetails = parse_json(AuthenticationProcessingDetails)
+| mv-apply JsonAuthProcDetails on (
+    where JsonAuthProcDetails.key startswith "Legacy TLS"
+    | project HasLegacyTls=JsonAuthProcDetails.value
+)
+| where HasLegacyTls == true
+
+// Non-interactive sign-ins
+AADNonInteractiveUserSignInLogs
+| where AuthenticationProcessingDetails has "Legacy TLS"
+    and AuthenticationProcessingDetails has "True"
+| extend JsonAuthProcDetails = parse_json(AuthenticationProcessingDetails)
+| mv-apply JsonAuthProcDetails on (
+    where JsonAuthProcDetails.key startswith "Legacy TLS"
+    | project HasLegacyTls=JsonAuthProcDetails.value
+)
+| where HasLegacyTls == true
